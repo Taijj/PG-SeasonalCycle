@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -17,19 +18,32 @@ public class MainLogic : MonoBehaviour
     
     
     #region Input
-    public void Awake()
+    public void Awake() => _input.OnHorizontalDrag += OnDrag;
+    public void OnDestroy() =>  _input.OnHorizontalDrag -= OnDrag;
+    private void OnDrag(float xDelta) => AlterParameter(xDelta);
+    #endregion
+    
+    
+    
+    #region Seasons
+    public void Start() => UpdateSeasons();
+
+    private void AlterParameter(float delta)
     {
-        _input.OnHorizontalDrag += OnDrag;
+        _parameter += delta;
+        UpdateSeasons();
     }
 
-    public void OnDestroy()
+    private void UpdateSeasons()
     {
-        _input.OnHorizontalDrag -= OnDrag;
-    }
-
-    private void OnDrag(float xDelta)
-    {
-        _parameter += xDelta;
+        var offset = 1f/_seasons.Length;
+        for (int i = 0; i < _seasons.Length; i++)
+        {
+            var t = _parameter + i*offset;
+            t %= 1f;
+            
+            _seasons[i].position = _spline.EvaluatePosition(t);
+        }
     }
     #endregion
 
