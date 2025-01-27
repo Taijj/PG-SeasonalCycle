@@ -11,11 +11,12 @@ public class MainLogic : MonoBehaviour
     [SerializeField] private Transform[] _seasons;
     [SerializeField] private Spline _spline;
     [SerializeField] private HorizontalDragInput _input;
-    [Space] [SerializeField] private int _monthsOffset;
+    [Space]
+    [SerializeField] private int _monthsOffset;
     [SerializeField] private ScrollRect _monthsRect;
     [Space]
-    [SerializeField, ReadOnly(true)]
-    private float _parameter;
+    [SerializeField] private float _parameter;
+    [SerializeField, Range(0f, 1f)] private float _phaseOffset;
     #endregion
     
     
@@ -50,7 +51,7 @@ public class MainLogic : MonoBehaviour
         var offset = 1f/_seasons.Length;
         for (int i = 0; i < _seasons.Length; i++)
         {
-            var t = (_parameter + i*offset) % 1f;
+            var t = (_parameter + i*offset + _phaseOffset/_seasons.Length) % 1f;
             _seasons[i].position = _spline.EvaluatePosition(t);
         }
     }
