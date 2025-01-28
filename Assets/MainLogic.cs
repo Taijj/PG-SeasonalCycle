@@ -25,6 +25,17 @@ public class MainLogic : MonoBehaviour
     public void Awake() => _input.OnHorizontalDrag += OnDrag;
     public void OnDestroy() =>  _input.OnHorizontalDrag -= OnDrag;
     private void OnDrag(float xDelta) => AlterParameter(xDelta);
+
+    public void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
     #endregion
     
     
